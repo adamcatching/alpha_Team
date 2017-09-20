@@ -6,6 +6,6 @@ import sys
 ## What barcodes are present, and how many of them represent overlapping codons?
 ## How frequently?
 
-data = pic.load(open("",""))
+data = pic.load(open("allele_dic.pkl","rb"))
 print data
 
