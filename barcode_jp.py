@@ -1,4 +1,9 @@
 import cPickle as pic #cPickle implements pickle in C, so it's faster
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 #import sys
 
 ## Is there a bias in the barcodes? Are there different barcodes for the same mutation?
@@ -59,8 +64,36 @@ for i in range(0, len(sorted_barcode_data)):
         matrix[aa_value[codons[neuc_to_codon(str(sorted_barcode_data[i][1][1]))]]][sorted_barcode_data[i][1][0]] += 1
 
 ##Prints matrix
-for aa_value in range(len(matrix)):
-    print matrix[aa_value]
+#for aa_value in range(len(matrix)):
+#    print matrix[aa_value]
 
 ##Prints number of WT barcodes
-print "There are", num_WT,  "WT barcodes"
+print "There are", num_WT, "WT barcodes"
+
+##Need to put this matrix into a csv file with headers so it can be read by seaborn to make the heatmap
+
+##Column of amino acids so the matrix has a left axis
+sorted_aa_value = sorted(aa_value.items(), key=lambda x: x[1])
+#print sorted_aa_value
+
+left_axis = []
+for key, value in sorted_aa_value:
+    left_axis.append(key)
+print left_axis
+
+df = pd.DataFrame(matrix)
+df.to_csv("thenews.csv")
+
+#Read the csv that contains the matrix
+df =  pd.read_csv("thenews.csv")
+print df.head()
+
+#df = df.pivot(df, "Amino Acids", "Position", "barcodes")
+sns.heatmap(df,cmap="YlGnBu",fmt="",linewidths=0.5,yticklabels=left_axis) #cmap="RdYlGn", cmap="YlGnBu", cmap="viridis", annot=True,
+plt.yticks(rotation=0)
+plt.show()
+
+#flights = sns.load_dataset(matrix)
+#matrix = matrix.pivot("month", "year", "passengers")
+#ax = sns.heatmap(matrix)
+#plt.show()
