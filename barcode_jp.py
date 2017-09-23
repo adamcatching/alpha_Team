@@ -82,10 +82,10 @@ for key, value in sorted_aa_value:
 print left_axis
 
 df = pd.DataFrame(matrix)
-df.to_csv("thenews.csv")
+df.to_csv("aabyposmatrix.csv")
 
 #Read the csv that contains the matrix
-df =  pd.read_csv("thenews.csv")
+df =  pd.read_csv("aabyposmatrix.csv")
 print df.head()
 
 #df = df.pivot(df, "Amino Acids", "Position", "barcodes")
