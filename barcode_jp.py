@@ -4,8 +4,6 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-#import sys
-
 ## Is there a bias in the barcodes? Are there different barcodes for the same mutation?
 ## What's the frequency?
 
@@ -70,30 +68,25 @@ for i in range(0, len(sorted_barcode_data)):
 ##Prints number of WT barcodes
 print "There are", num_WT, "WT barcodes"
 
-##Need to put this matrix into a csv file with headers so it can be read by seaborn to make the heatmap
-
-##Column of amino acids so the matrix has a left axis
+##Sorts aminotonumber dict by number for use as left axis
 sorted_aa_value = sorted(aa_value.items(), key=lambda x: x[1])
 #print sorted_aa_value
 
+##Writes the left axis column: the keys (amino acid) of the above sorted dict
 left_axis = []
 for key, value in sorted_aa_value:
     left_axis.append(key)
-print left_axis
+#print left_axis
 
+##Converts amino acid by position number matrix to a csv file for use by seaborn
 df = pd.DataFrame(matrix)
 df.to_csv("aabyposmatrix.csv")
 
-#Read the csv that contains the matrix
+##Read the csv that contains the matrix
 df =  pd.read_csv("aabyposmatrix.csv")
 print df.head()
 
-#df = df.pivot(df, "Amino Acids", "Position", "barcodes")
+##Makes a heatmap from the amino acid by position matrix csv file
 sns.heatmap(df,cmap="YlGnBu",fmt="",linewidths=0.5,yticklabels=left_axis) #cmap="RdYlGn", cmap="YlGnBu", cmap="viridis", annot=True,
 plt.yticks(rotation=0)
 plt.show()
-
-#flights = sns.load_dataset(matrix)
-#matrix = matrix.pivot("month", "year", "passengers")
-#ax = sns.heatmap(matrix)
-#plt.show()
