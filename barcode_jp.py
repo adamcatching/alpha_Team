@@ -1,5 +1,8 @@
 import cPickle as pic #cPickle implements pickle in C, so it's faster
-#import sys
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 ## Is there a bias in the barcodes? Are there different barcodes for the same mutation?
 ## What's the frequency?
@@ -59,8 +62,31 @@ for i in range(0, len(sorted_barcode_data)):
         matrix[aa_value[codons[neuc_to_codon(str(sorted_barcode_data[i][1][1]))]]][sorted_barcode_data[i][1][0]] += 1
 
 ##Prints matrix
-for aa_value in range(len(matrix)):
-    print matrix[aa_value]
+#for aa_value in range(len(matrix)):
+#    print matrix[aa_value]
 
 ##Prints number of WT barcodes
-print "There are", num_WT,  "WT barcodes"
+print "There are", num_WT, "WT barcodes"
+
+##Sorts aminotonumber dict by number for use as left axis
+sorted_aa_value = sorted(aa_value.items(), key=lambda x: x[1])
+#print sorted_aa_value
+
+##Writes the left axis column: the keys (amino acid) of the above sorted dict
+left_axis = []
+for key, value in sorted_aa_value:
+    left_axis.append(key)
+#print left_axis
+
+##Converts amino acid by position number matrix to a csv file for use by seaborn
+df = pd.DataFrame(matrix)
+df.to_csv("aabyposmatrix.csv")
+
+##Read the csv that contains the matrix
+df =  pd.read_csv("aabyposmatrix.csv")
+print df.head()
+
+##Makes a heatmap from the amino acid by position matrix csv file
+sns.heatmap(df,cmap="YlGnBu",fmt="",linewidths=0.5,yticklabels=left_axis) #cmap="RdYlGn", cmap="YlGnBu", cmap="viridis", annot=True,
+plt.yticks(rotation=0)
+plt.show()
