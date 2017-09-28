@@ -48,12 +48,5 @@ with open("mad.txt", "r") as f:
             if Q_filter(lines[i+2]): #the individual amino acid's phred scores
                good_bc.append(lines[i].strip("\n"))
 
-    #for line in islice(f, 1, None, 4): #begins at line 1, reads every 4th after it
-    #    if "N" not in line:
-    #        if Q_filter()
-    #            good_bc.append(line)
-    #            print "wrwerw"
-    #            print good_bc
-        #line = line.strip("\n")
     print "List of good barcodes:"
     print good_bc
