@@ -45,7 +45,7 @@ with open("mad.txt", "r") as f:
 
     for i in range(1, len(lines), 4): #just the barcodes
         if "N" not in lines[i]:
-           if Q_filter(lines[i+2]):
+            if Q_filter(lines[i+2]): #the individual amino acid's phred scores
                good_bc.append(lines[i].strip("\n"))
 
     #for line in islice(f, 1, None, 4): #begins at line 1, reads every 4th after it
