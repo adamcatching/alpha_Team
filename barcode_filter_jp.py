@@ -31,11 +31,6 @@ def Q_filter(qscores):
     else:
         return False
 
-##This is a test
-#fake = "2;AA!90()"
-#if Q_filter(fake):
-#    print "ya good"
-
 ##Opens file and reads all barcodes. Looks for barcodes with no "N"s and puts
 ##them into a list if they have a Q score >= 20.
 good_bc = []
