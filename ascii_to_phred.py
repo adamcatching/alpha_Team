@@ -45,5 +45,4 @@ ascii_to_prob = {
         'J':0.00008,
         'K':0.00006}
 
-
-pickle.dump( ascii_to_prob, open( "ascii_to_prob.pkl", "wb" ) )
+pickle.dump(ascii_to_prob, open( "ascii_to_prob_py2.pkl", "wb" ))
