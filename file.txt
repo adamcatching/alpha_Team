@@ -1,3 +1,0 @@
-Hi Guys!
-
-This is me, editing in Vim.
