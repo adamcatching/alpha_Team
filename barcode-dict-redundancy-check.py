@@ -35,8 +35,8 @@ for each in barcodes:
             asynseq.append(asdict.get(possibles)) # append the sequences to a list (should = # of locations)
     print "%s possible locations returned %s sequences.\n" %(len(locations), len(asynseq)), asynseq
     # Compare the seqs and spit back cases where diff > 0
-    for a, b in itertools.combinations(asynseq,2):
-        # print 
+    # for a, b in itertools.combinations(asynseq,2):
+    #     print
     # If there are multiple instances of both possible barcodes not matching other barcodes...
 
     # For barcodes that map to mutations in one case, but WT in others, make sure the mutation is not in a missing section
