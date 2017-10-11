@@ -1,6 +1,8 @@
 import cPickle as pic #cPickle implements pickle in C, so it's faster
 import math
 from itertools import islice
+import sys
+filename = sys.argv[-1]
 #import numpy as np
 #import pandas as pd
 #import seaborn as sns
@@ -79,7 +81,9 @@ def paste_seqs((start, stop), R1, good_overlap):
 
 ##Opens file. Merges a-syn sequence, taking the base in the overlap with the lower uncertainty.
 ##Returns a fastq file with the header, merged a-syn, and its individual bases' phred scores.
-with open("Lack_of_N.fastq", "r") as f:
+#with open("Composite.fastq", "r") as f:
+with open(filename, "r") as f:
+#with open("sad.txt", "r") as f:
     with open("merged_seqs.fastq", "w") as w:
         lines = f.readlines()
 
