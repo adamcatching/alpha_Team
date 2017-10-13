@@ -3,10 +3,6 @@ import math
 from itertools import islice
 import sys
 filename = sys.argv[-1]
-#import numpy as np
-#import pandas as pd
-#import seaborn as sns
-#import matplotlib.pyplot as plt
 
 ##Writiing the pickled items to .txt files to see their contents
 #with open("ascii_to_prob.txt", "w") as f:
@@ -22,7 +18,7 @@ def Q_filter(qscores):
     total = 0
     num = len(qscores)
 
-    for i in range(len(qscores)):
+    for i in range(len(qscores)-1):
         total += float(phred[str(qscores[i])]) #only one key to each phred[]
 
     avg_Phred_probability = total/num
@@ -38,18 +34,12 @@ def Q_filter(qscores):
 def get_overlap(seq):
     start = 0
     stop = 0
-    got_start = False
-    got_stop = False
 
-    while not got_stop:
-        for i in range(len(seq)):
-            if seq[i] != " " and not got_start:
-                start = i
-                got_start = True
-            if seq[i] == " " and got_start:
-                stop = i - 1
-                got_stop = True
-                break
+    for i in range(len(seq)):
+        if seq[i] != " ":
+            start = i
+            stop = len(seq.rstrip()) ##.rstrip() so you're not counting the \n at the end
+            break
     return start, stop+1 ##added the +1 so that [start:stop] would actually capture the 'stop'
 
 ##Takes R1, R3, and the phred scores for their individual nucleotides (phR1 and phR3).
@@ -60,7 +50,11 @@ def get_overlap(seq):
 def compare_overlaps(R1, R3, phR1, phR3):
     good_overlap_aa = ""
     good_overlap_phred = ""
-    for i in range(len(R1)): #all same length anyway
+    #print R1, R3
+    #print phR1, phR3
+    for i in range(len(R1)-1): #all same length anyway
+        #print float(phred[phR1[i]]), float(phred[phR3[i]])
+        #print i
         if float(phred[phR1[i]]) < float(phred[phR3[i]]):
             good_overlap_aa += R1[i]
             good_overlap_phred += phR1[i]
@@ -72,6 +66,7 @@ def compare_overlaps(R1, R3, phR1, phR3):
         elif float(phred[phR1[i]]) == float(phred[phR1[i]]) and R1[i] == R3[i]:
             good_overlap_aa += R1[i]
             good_overlap_phred += phR1[i]
+
     return good_overlap_aa, good_overlap_phred
 
 ##Replaces the nucleotides in the overlap of R1 with the nucleotides of the "correct", good overlap seq.
@@ -83,14 +78,17 @@ def paste_seqs((start, stop), R1, good_overlap):
 ##Returns a fastq file with the header, merged a-syn, and its individual bases' phred scores.
 #with open("Composite.fastq", "r") as f:
 with open(filename, "r") as f:
-#with open("sad.txt", "r") as f:
-    with open("merged_seqs.fastq", "w") as w:
+    with open("merged_seqs.txt", "w") as w:
         lines = f.readlines()
 
         for i in range(1, len(lines), 6): #just the barcodes, which are at the end of line 1 and every line 6 lines away
             if Q_filter(lines[i+3][-19:-1]) == True: #the individual amino acid's phred scores
+                #print lines[i+3].rstrip()
+                #print lines[i+3][-19:-1]
                 (start, stop) = get_overlap(lines[i+1])
+                #print "start", start, "stop", stop
                 (good_overlap_aa, good_overlap_phred) = compare_overlaps(lines[i][start:stop], lines[i+1][start:stop], lines[i+3][start:stop], lines[i+4][start:stop])
+                #print "here", good_overlap_aa, good_overlap_phred
                 if good_overlap_aa != 0:
                     w.write(str.rstrip(lines[i-1])+ "\n") ##header
                     good_seq = paste_seqs((start, stop), str.rstrip(lines[i]), good_overlap_aa)
